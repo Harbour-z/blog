@@ -53,4 +53,4 @@ const docs = defineCollection({
     })
 })
 
-export const collections = { blog, docs }
+export const collections = { blog }
