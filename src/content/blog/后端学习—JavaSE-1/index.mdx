@@ -1,0 +1,240 @@
+---
+title: 后端学习—JavaSE-1
+author: Harbour-z
+description: '后端学习Java基础 - 笔记 1，主要是语法基础的查缺补漏，下一篇开始面向对象。'
+tags:
+  - Backend
+publishDate: 2025-02-11 11:00
+draft: false
+language: '中文'
+---
+
+import {Aside} from 'astro-pure/user'
+
+<Aside>这并不是一个完整的JavaSE笔记，而是我的查缺补漏，对于我本人比较适用的一份笔记或者说备忘录。</Aside>
+
+我选择的是黑马的b站课程hhh，虽然很多人吐槽这样子培训班式的学开发，但是播放量以及许多人的推荐想必还是有一定道理的：[课程链接](https://www.bilibili.com/video/BV1Cv411372m?p=47&vd_source=27fdfdebc4dbb1b3cad17619a9b33aaf)
+
+## Java入门
+Java**三大平台**：Java SE、 Java ME、 Java EE
+* JavaSE是Java语言的标准版，用于桌面应用的开发，是其他两个版本的基础
+* Java ME是Java语言的小型版，用于嵌入式电子设备或小型移动系统
+* Java EE是Java语言的企业版，用于Web方向的网站开发，包括浏览器和服务器的开发。
+
+Java是混合型的语言: 首先编译为.class二进制字节码文件，然后运行在虚拟机中。Java的跨平台特性也是通过虚拟机实现的，不同OS安装不同虚拟机。
+* JDK（Java Development Kit）：JVM-Java Virtual Machine、核心类库、开发工具（javac编译工具、java运行工具、jdb调试工具、jhat内存分析工具）
+* JRE（Java Runtime Environment）：JVM、核心类库和运行工具组成
+
+## Java基础概念
+
+```java
+//单行注释
+/*
+这是
+多行注释
+*/
+/**
+这是文档注释
+*/
+```
+
+**关键字：** Java中有特定含义的，不能作为标识符使用；关键字字母全部小写。
+
+Java中一共有53个关键字，goto和const是保留关键字，在目前的 Java 版本中没有实际用途，但为了保持语言的兼容性和扩展性而保留。true、false和null有时也被称为字面常量，但从某种意义上也可看作特殊的关键字。
+- 访问控制：private、protected、public。
+- 类、接口和抽象类相关：class、interface、abstract、extends、implements、final、enum、strictfp。
+- 数据类型：byte、short、int、long、float、double、char、boolean、void。
+- 流程控制
+  - 条件语句：if、else、switch、case、default。
+  - 循环语句：for、while、do、break、continue、return。
+  - 异常处理：try、catch、finally、throw、throws。
+- 修饰符：static、volatile、transient、synchronized、native、assert。
+- 包相关：package、import。
+- 其他：this、super、instanceof、new、true、false、null、goto、const。
+
+字面量
+Java中，字面量Literal是指在程序中直接给出的常量值，可以直接出现再代码中表示特定的数据。具体类型有：
+- 整数字面量，二进制0b或者0B开头，八进制代理中以0开头，十六进制以0x开头；这是JDK7的特性
+null是不能被直接打印的
+
+基本数据类型：int long byte(-128-127) short float double char boolean
+
+定义long类型的变量需要在数据值后加入一个L作为后缀，不然会报错。float后加F，double不需要加后缀。
+整数和小数取值范围大小关系：double> float> long> int> short> byte
+
+小驼峰命名：标识符由多个单词组成，第一个词首字母小写，其余首字母大写。
+
+关于键盘录入，Java中有个类叫Scanner。
+```java
+import java.util.Scanner;
+Scanner sc = new Scanner(System.in);
+int i = sc.nextInt();//这里接收数据
+```
+
+3. 运算符
+运算符：对字面量或变量进行操作的符号
+表达式：用运算符把字面量或变量连接起来的式子
+常见运算符有：
+- 算术运算符：+ - * / %（取余）
+隐式转换（自动类型提升）：取值范围小的变为大的
+整数和小数取值范围大小关系：double> float> long> int> short> byte
+此处注意，byte short char三种类型在运算的时候，都会先直接提升为int再进行计算
+还有强制转换。
++操作中出现字符串，作用就是字符串连接符，将前后的数据进行拼接，产生新字符串
+出现字符时，会先转换为其ascii码对应的数字再进行计算
+- 自增自减运算符：++和--无论在变量前后，单独写一行结果是一样的。
+- 赋值运算符和关系运算符：后者就是 ==、 !=、 >、 >=、< 、\<= ，结果都是boolean类型
+- 逻辑运算符：& |  ^ !
+- 短路逻辑运算符：&&   ||，可以避免不必要的计算
+- 三元运算符
+[图片]
+计算机中的存储和计算都是以补码的形式进行的
+4. 判断和循环
+switch语句格式：
+```java
+switch(expression){
+  case value1:
+    body1;
+    break;
+  case value2:
+    body2;
+    break;
+  ...
+  default:
+    bodyN+1;
+    break;
+}
+```
+default可以省略，语法无问题，但是不建议，且可以写在任意位置，一般习惯写在最末尾。
+case穿透：语句体中无break导致，其首先还是会做匹配，如果匹配上了那么会执行当前以及以后的所有语句体，一直到遇到break或右大括号为止。
+
+JDK12中有一个新特性：
+```java
+switch(expression){
+  case value1 -> body1;
+  case value2 -> body2;
+  case value3,value4,value5 -> {
+    body3;
+  }
+  default ->{
+   bodyn;
+  }
+}
+无限循环
+共有三种
+for(;;){
+
+}
+
+//一般用这个
+while(true){
+}
+
+do{
+}while(true);
+```
+跳转控制语句
+用continue来结束本次循环，但是继续下次循环
+5. 数组
+一种容器，存储同种类型的多个值.
+初始化过程分为静态初始化和动态初始化。
+int[] array1;
+
+//静态初始化完整格式
+int[] array2 = new int[]{11,2,33,4,55};
+//简化格式
+int[] array3 = {11,22,33,44};
+数组变量名中存储的是数组在内存中的地址，数组是一种引用数据类型。
+
+动态初始化数组
+先不存值，只确定数组存储的数据类型和数组长度
+int[] arr = new int[3];
+Boolean类型数组默认值是false，String默认值null
+Java程序运行原理
+编译产生class文件，提到内存中的JVM虚拟机中。字节码文件先加载到方法区，栈内存是方法运行时候所进入的内存，变量在方法里面，所以变量也在栈内存中；堆中放的都是new出来的，会在这里开辟空间并产生地址。
+Java内存分配：
+- 方法区
+- 栈
+- 堆
+- 本地方法栈
+- 程序计数器
+ 多个变量指向同一个数组对象，这里的赋值是引用传递：
+int[] arr1 = {1,2,3};
+int[] arr2 = arr1;
+[图片]
+某个数组变量存储的地址是null，此变量将不再指向任何数组变量。
+6. 方法
+[图片]
+封装功能，方便代码复用。
+需要注意的是，一些语言如Python、JavaScript和C++支持默认参数，但是Java没有这种特性，形参不允许初始化值：
+- Java强调显式和类型安全，避免隐式行为
+- 默认参数会增加语言解析和编译的复杂性
+- 通过方法重载和Builder模式等可以实现类似功能
+注意事项：
+- Java方法本身不能直接嵌套定义，也就是不能在一个方法内直接定义另一个方法，但是其存在一些类型的功能实现：
+  - 使用内部类，在内部类中定义使用方法
+```java
+public class Outer {
+    public void outerMethod() {
+        class Inner {
+            void innerMethod() {
+                System.out.println("This is a nested method-like behavior.");
+            }
+        }
+        Inner inner = new Inner();
+        inner.innerMethod();
+    }
+}
+```
+  - Java8以上使用Lambda表达式
+```java
+public class Outer {
+    public void outerMethod() {
+        Runnable nestedBehavior = () -> {
+            System.out.println("This is a nested method-like behavior using Lambda.");
+        };
+        nestedBehavior.run();
+    }
+}
+```
+  - 使用方法引用
+```java
+public class Outer {
+    public void outerMethod() {
+        this::nestedBehavior;
+    }
+
+    private void nestedBehavior() {
+        System.out.println("This is a nested method-like behavior using method reference.");
+    }
+}
+```
+  - 使用匿名内部类
+```java
+public class Outer {
+    public void outerMethod() {
+        new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("This is a nested method-like behavior using anonymous inner class.");
+            }
+        }.run();
+    }
+}
+```
+- 无返回值的方法只能直接调用，有返回值可以定义变量接收结果或者直接输出调用
+方法在计算机中的执行原理
+方法被调用时，进入栈内存中运行
+Java的参数传递机制
+Java的参数传递机制都是值传递，实参是在方法内部定义的变量。
+基本类型的参数传递
+基本类型的参数传递都是满足值传递的
+引用类型的参数传递
+如传入一个Int[]这样的数组，就是引用传递了；
+其实本质上也是值传递，只不过这里的值是数组对象的地址拷贝而已。
+方法重载
+一个类中，出现多个方法的名称相同，但是他们的形参列表不同，那么这些方法就称为方法重载。
+形参列表不同：形参的个数、类型、顺序不同，不关心形参的名称
+应用场景：在开发中为处理一类业务提供多种解决方案，用方法重载来设计很专业。
+
+`return;` 可以用在无返回值的方法中，作用是：立即跳出并结束当前方法的执行。
