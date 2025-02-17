@@ -17,6 +17,7 @@ const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
 const backend = ['Vercel', 'Waline']
 const tools = ['Vscode', 'Vim', 'Git', 'Linux']
 const other = ['Markdown', 'Latex']
+const sports = ['Badminton', 'Running', 'Swimming']
 
 const MAX_POSTS = 10
 const allPosts = await getBlogCollection()
@@ -146,16 +147,16 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
       <Section title='Education'>
         <Card
           as='a'
-          heading='西安交通大学'
-          subheading='软件学院-本科'
+          heading='Xi&apos;an Jiaotong University - 西安交通大学'
+          subheading='School of Software Engineering - 软件学院-本科'
           date='2024.8 - Present'
           href='https://www.xjtu.edu.cn'
         >
         </Card>
         <Card
           as='a'
-          heading='西安交通大学'
-          subheading='能源与动力工程-本科'
+          heading='Xi&apos;an Jiaotong University - 西安交通大学'
+          subheading='School of Power and Engineering - 能源与动力工程-本科'
           date='2022.09 - 2024.07'
           href='https://www.xjtu.edu.cn'
         >
@@ -205,6 +206,7 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
         <SkillLayout title='Languages' skills={languages} />
         <SkillLayout title="Tools" skills={tools} />
         <SkillLayout title='Other' skills={other} />
+        <SkillLayout title='Sports' skills={sports} />
       </Section>
     </div>
     <a
