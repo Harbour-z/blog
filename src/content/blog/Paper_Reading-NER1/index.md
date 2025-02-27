@@ -103,5 +103,11 @@ ExtendNER中教师和学生模型也是一致的，在识别新类的策略上�
 
 最终tags获取需动态调整输出维度；通过维特比算法（Viterbi）解码全局最优路径。
 
+## A Neural Span-Based Continual Named Entity Recognition Model
+
+文章地址：http://arxiv.org/abs/2302.12200
+
+本文提出模型**SpanKL**，一个Span-based model with Knowledge distillation (KD)
+
 
 
