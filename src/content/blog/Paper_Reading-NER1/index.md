@@ -8,6 +8,7 @@ tags:
   - deep learning
   - paper reading
   - NER
+language: 中文
 draft: false
 heroImage: {src: './cover.png' , color: '#9698C1'}
 ---
@@ -109,5 +110,11 @@ ExtendNER中教师和学生模型也是一致的，在识别新类的策略上�
 
 本文提出模型**SpanKL**，一个Span-based model with Knowledge distillation (KD)
 
+<img src="./image-20250227184352176.png" alt="image-20250227184352176" style="zoom:50%;" />
 
+Introduction部分提出在传统的增量NER序列标注任务中，对于O标签的token可能会在新任务到来后改变，这种行为的影响在原文中表示为：
+
+> This incoherent optimization will force the model to frequently update the previously learned parameters, thus we consider aggravates the catastrophic forgetting or interference.
+
+一种更有效的方式是，在当前任务中的O标注为`O-ORG`
 
