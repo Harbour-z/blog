@@ -3,7 +3,7 @@ title: "Paper Reading: NER -1"
 author: Zhidong Zhang
 description: 记录我读的一些NER任务相关论文
 publishDate: 2025-02-20
-updatedDate: 2025-02-27
+updatedDate: 2025-03-02
 tags:
   - deep learning
   - paper reading
@@ -110,11 +110,114 @@ ExtendNER中教师和学生模型也是一致的，在识别新类的策略上�
 
 本文提出模型**SpanKL**，一个Span-based model with Knowledge distillation (KD)
 
-<img src="./image-20250227184352176.png" alt="image-20250227184352176" style="zoom:50%;" />
+![image-20250227184352176](./image-20250227184352176.png)
 
 Introduction部分提出在传统的增量NER序列标注任务中，对于O标签的token可能会在新任务到来后改变，这种行为的影响在原文中表示为：
 
 > This incoherent optimization will force the model to frequently update the previously learned parameters, thus we consider aggravates the catastrophic forgetting or interference.
 
-一种更有效的方式是，在当前任务中的O标注为`O-ORG`
+一种更有效的方式是，在当前任务中的O标注为`O-ORG`的形式，这样是把一个entity'识别问题转换为了一个二分类问题。
+
+作者提出了**SpanKL**模型。这是一种Span-based Model。是一种用于处理文本中连续片段（Span）的模型，其核心思想是直接建模文本中的片段（Span），而不是逐个处理单词或字符，这种方法可以更好捕捉片段级别的语义信息，并在某些任务中表现更优。
+
+为coherently optimizing提供了一些优势：
+
+* 在采用KD的CL中是向后兼容的
+* 向前兼容，通过二分类识别减少对未来任务的干扰
+* span和entity-level的独立建模有更好的学习和蒸馏能力
+* 得益于 span-based method ，CL-NER中支持任何嵌套实体，嵌套实体是指一个实体完全包含在另一个实体内部的情况。
+
+这篇文献中使用的数据集是OntoNotes和Few-NERD
+
+**SpanKL** NER Model
+
+不同任务中的方法是non-overlapping
+
+<img src="./image-20250227203342730.png" alt="image-20250227203342730" style="zoom:50%;" />
+
+模型结构如图是由Contextual Encoder，Span Representation layer， multi-label loss layer with KD.
+
+* Contextual Encoder：输入的tokens经过embedding vector后传入contextual encoder来得到contextual hidden vectors
+
+这里的Span Matrix主要是方便表示
+
+* 在损失函数计算时，是用sigmoid激活span matrix中的logit，然后计算Binary Cross Entropy
+
+* 然后做Knowledge Distillation
+* 最终得到的损失函数为：$$\mathcal{L}=\alpha\mathcal{L}_{BCE}+\beta\mathcal{L}_{KD}$$
+
+---
+
+## Few-Shot Class-Incremental Learning for Named Entity Recognition
+
+ACL2022：https://aclanthology.org/2022.acl-long.43
+
+https://github.com/GeorgeLuImmortal/PUnifiedNER
+
+这篇文章研究的是在少样本学习的情况下来实现增量NER。
+
+这篇文章研究了一个更加现实的设定：
+
+1. incrementally learns on new classes with few annotations
+2. without requiring access to training data for old classes
+
+在少样本学习中，无法得到正常的`reply dataset`，因此本文选择合成数据，即`synthetic reply`
+
+本文backbone是`BERT-CRF`，由BERT-base带有一个全连接层的encoder和一个条件随机场CRF层组成
+
+![image-20250302001952812](./image-20250302001952812.png)
+
+---
+
+## PUnifiedNER: A Prompting-Based Unified NER System for Diverse Datasets
+
+文献地址：https://ojs.aaai.org/index.php/AAAI/article/view/26564
+
+如标题所述，本文的模型是一个Prompting-based Unified NER模型，最高可以同时识别37个实体类，这个模型对比识别特定类的NER模型显得更加通用实用。这里的专用指的是比如只能识别金融领域、医学领域等等这些特定领域的实体类别。
+
+通过联合训练，结合来自不同数据集的标签信息可以让统一模型性能更好，底层原理就是底层语义或实体识别是跨语料库共享的，利用这种共享的语义信息可以增强模型的鲁棒性。这种提升来自commonality and diversity of label information。
+
+另外，由于语义的多义性，现存的NER模型一般会输出所有识别的类型，灵活识别是更有吸引力的。
+
+本文模型对上述问题的解决方法就是prompt learning，backbone是T5模型（encoder and decoder model）。prompt也可以作为指导模型操作的指令选择不同的输出：
+
+![image-20250302004439730](./image-20250302004439730.png)
+
+总结contributions：1）模型能识别至多37种类别，给定不同prompts可以灵活生成结果，是一种on-demand entity recognition；2）单一模型再公开的八个中文NER dataset上表现良好，变相的是极大减小了模型参数；3）性能优越，非常有效。
+
+提示学习本质就是更好引导预训练模型。
+
+作者将NER问题重构为了一个prompting-based seq2seq problem：输入为$$x_{input}=[s_e,s_{p_1},...,s_e,s_{p_n},s_t,x]$$，其中 $$s_{e}$$ is the special token “<entity>” indicating that the following token is the entity type that we are interested in; $$s_{p_i}$$ is the entity type, e.g., “city”; and $$s_{t}$$ is the special token “<text>” indicating that the following text sequence is the sentence from which entities should be extracted。
+
+输出为$$y_{output}=((s_{p_1}):(ent_1),...,(s_{p_n}):(ent_n))$$，很好理解。
+
+八个数据集为：Ecommerce (Ding et al. 2019), MSRA (Levow 2006), OntoNotes 4.0 (Pradhan et al. 2013), People Daily 2014, Boson,2 Resume (Zhang and Yang 2018), CCKS2021,3 and CLUENER (Xu et al. 2020) datasets.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
