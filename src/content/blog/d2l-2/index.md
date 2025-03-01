@@ -4,5 +4,6 @@ description: 之前没有系统学习过沐神的这本书，这几个月要认�
 tags:
   - deep learning
 publishDate: 2025-03-01
+draft: true
 ---
 
