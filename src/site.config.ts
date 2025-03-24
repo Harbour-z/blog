@@ -7,7 +7,7 @@ export const theme: ThemeUserConfig = {
   /** Will be used in index page & copyright declaration */
   author: 'Zhidong Zhang',
   /** Description metadata for your website. Can be used in page metadata. */
-  description: 'Keep trying, keep going',
+  description: '行到水穷处，坐看云起时',
   /** The default favicon for your site which should be a path to an image in the `public/` directory. */
   favicon: 'public/favicon/favicon.ico',
   /** Specify the default language for this site. */
@@ -94,7 +94,7 @@ export const integ: IntegrationUserConfig = {
       { name: 'Name', val: theme.title },
       { name: 'Desc', val: theme.description || 'Null' },
       { name: 'Link', val: 'https://zharbour.cn/' },
-      { name: 'Avatar', val: 'https://astro-pure.js.org/favicon/favicon.ico' }
+      { name: 'Avatar', val: 'https://github.com/Harbour-z/blog/blob/main/public/favicon/favicon.ico' }
     ]
   },
   // Enable page search function
