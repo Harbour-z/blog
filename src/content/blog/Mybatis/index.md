@@ -15,6 +15,20 @@ draft: false
 
 > 我听的课程为黑马23年的Javaweb课程，其中有一部分内容与现在(2025)有出入
 
+在IDEA中有个巨烦的事情，就是maven项目下载不了源码，每次都说找不到对象，最后在网上一通搜索后找到了个有用的，在项目文件夹下打开命令行，使用：
+
+```powershell
+mvn dependency:resolve -Dclassifier=sources
+```
+
+即可解决。
+
+
+
+
+
+
+
 ## 遇到的问题
 
 Springboot3中切换默认数据库连接池到Druid时需要在 `pom.xml` 中多配置一些内容，不然切换不成功：
