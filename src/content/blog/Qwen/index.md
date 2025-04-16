@@ -23,6 +23,10 @@ Qwen也即通义千问，是由阿里研究的系列开源模型，这是国内�
 
 接下来的工作是利用vllm、ollama等工具进行部署，这种部署的好处是持久化加载模型权重进内存，否则在测试的时候我每次运行代码都会重新载入一遍模型，载入时间甚至要超过推理时间。（当然我猜肯定有API可以实现持久化加载，不过我目前还不会）第二个好处就是可以进行多线程加速。
 
+![image-20250401020812350](./image-20250401020812350.png)
+
+> 深夜八卡A100爽一把(bushi)
+
 ## Qwen2.5-omni
 
 我写了一段测试代码第二天早上，就从wx公众号上看到了Qwen更新了Qwen2.5-omni，在统一了四种模态后居然语音性能与Qwen2-7B-audio，其他模态性能与Qwen2.5-7B-VL持平或过之，真的震惊到了我，去[Qwen2.5 Omni: See, Hear, Talk, Write, Do It All! | Qwen](https://qwenlm.github.io/zh/blog/qwen2.5-omni/)中看了一眼，demo效果很震撼，实现的是即时互动对话效果。
@@ -30,6 +34,28 @@ Qwen也即通义千问，是由阿里研究的系列开源模型，这是国内�
 这个模型提出的是`Thinker-Talker`架构，是端到端多模态模型。以往对视频模态进行理解的模型是基于抽帧的原理来做的，但是这个模型中利用时间轴对齐实现视频和音频输入的精确同步。
 
 ![](./overview.png)
+
+看到这个模型参数的讨论，是一位佬用自己的脚本生成的：
+
+```txt
+==================================================
+Model type               : qwen2_5_omni
+Total param num          : 10.732225408 B
+==================================================
+model.thinker            : 8.931813888 B
+model.talker             : 1.351360256 B
+model.token2wav          : 0.449051264 B
+model.thinker.audio_tower        : 0.639647232 B
+model.thinker.visual             : 0.676550144 B
+model.thinker.model              : 7.070619136 B
+model.thinker.lm_head            : 0.544997376 B
+```
+
+详见：[Qwen/Qwen2.5-Omni-7B · just a question about params](https://huggingface.co/Qwen/Qwen2.5-Omni-7B/discussions/17)
+
+## 这段时间写项目代码的收获
+
+我之前其实是没有写过这种和模型推理相关的工程代码的，也没有接触过A100(手动狗头)，这段时间写的时候了解了很多小技巧，如怎么把进程挂到后台
 
 ## 遇到的bug与解决方案
 
@@ -52,7 +78,26 @@ Qwen也即通义千问，是由阿里研究的系列开源模型，这是国内�
 
 ​		于是定位到了CUDA_HOME这个变量上，查阅了相关资料，然后通过Linux中环境变量的设置定位到了其指向 `/usr` 这个路径，进去一看发现这里的版本是10.1，谜题解开了！由于CUDA环境变量的错误指向导致了代码安装的错误判断，因此在我自己用户下的`.bashrc`中修改了环境变量到`/usr/local/CUDA12.4` 后问题得到了解决。
 
+> update：我后面仍然在创建新环境时遇到这个问题并且上述方式不奏效，只需要将导入的方式变为在当前环境的命令行中export一下就得到解决了，具体原理是怎么样的仍然未知。
 
+3. 在服务器的多conda环境中有遇到同时显示两个环境的情况：
 
+<img src="./image-20250331140849415.png" alt="image-20250331140849415" style="zoom:50%;" />
 
+学长告诉我直接在这种环境下运行甚至可能破坏base环境，我的方法是先：
+
+```bash
+conda activate
+```
+
+切换到两个都是base的环境：
+<img src="./image-20250331141025395.png" alt="image-20250331141025395" style="zoom:67%;" />
+
+然后再正常进行切换的命令就可以了。
+
+不过这个应该是vscode的bug，可以直接设置：
+
+```shell
+conda config --set auto_activate_base 
+```
 
