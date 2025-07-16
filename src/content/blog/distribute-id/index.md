@@ -1,7 +1,7 @@
 ---
 title: 分布式ID
 author: Zhidong Zhang
-description: 
+description: 这篇是对分布式ID的了解。
 publishDate: 2025-07-01
 # updatedDate: 
 draft: false
