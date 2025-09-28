@@ -12,12 +12,12 @@ import SkillLayout from '@/components/home/SkillLayout.astro'
 import avatar from '@/assets/avatar.png'
 import config from '@/site-config'
 
-const languages = ['Python', 'Java', 'Matlab', 'Shell']
+const languages = ['Python', 'Java', 'Rust','Matlab', 'Shell']
 const frontend = ['TypeScript', 'Vite', 'Webpack', 'Astro']
 const backend = ['Vercel', 'Waline']
-const tools = ['Vscode', 'Vim', 'Git', 'Linux']
+const tools = ['Vscode', 'Vim', 'Git', 'Linux', 'Docker']
 const other = ['Markdown', 'Latex']
-const sports = ['Badminton', 'Running', 'Swimming']
+const sports = ['Swimming','Badminton', 'Running',]
 
 const MAX_POSTS = 10
 const allPosts = await getBlogCollection()
@@ -91,7 +91,7 @@ const allPostsByDate = sortMDByDate(allPosts).slice(0, MAX_POSTS)
       <Section title='About'>
         <p class='text-muted-foreground'>Software Developer / XJTUSE</p>
         <p class='text-muted-foreground'>
-          I am now a sophomore student at <a href="http://en.xjtu.edu.cn/"><b>Xi'an Jiaotong University</b></a>, <a href="https://se.xjtu.edu.cn/School"><b>School of Software Engineering</b></a> .<br>
+          I am now a third-year undergraduate student at <a href="http://en.xjtu.edu.cn/"><b>Xi'an Jiaotong University</b></a>, <a href="https://se.xjtu.edu.cn/School"><b>School of Software Engineering</b></a> .<br>
           I am improving my programming and development skills.<br>
           My research interest includes Neural Language Processing and MLLM.<br>
           I am also an enthusiastic self-learner and interested in various fields of computer science. <br>
