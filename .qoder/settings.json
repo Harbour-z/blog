@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "ask": [
+      "Read(!D:\\blog/**)",
+      "Edit(!D:\\blog/**)"
+    ],
+    "allow": [
+      "Read(D:\\blog/**)",
+      "Edit(D:\\blog/**)"
+    ]
+  },
+  "memoryImport": {},
+  "monitoring": {}
+}
